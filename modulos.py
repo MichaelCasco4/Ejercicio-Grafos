@@ -61,6 +61,43 @@ class Grafo:
             _dfs(inicio)
 
         return orden_visita
+    
+    def es_conexo(self):
+        if not self.adyacencia:
+            return True
+        
+        incio = next(iter(self.adyacencia))
+        visitados = self.bfs(incio)
+        return len(visitados) == len(self.adyacencia)
+    
+    def encontrar_camino(self, inicio, fin):
+        if inicio not in self.adyacencia or fin not in self.adyacencia:
+            return []
+        
+
+        padres = {inicio: None}
+        cola =  [inicio]
+
+        while cola:
+            actual = cola.pop(0)
+            if actual == fin:
+                break
+            for vecino in self.obtener_vecinos(actual):
+                if vecino not in padres:
+                    padres[vecino] = actual 
+                    cola.append(vecino)
+
+        if fin not in padres:
+            return []
+        
+        camino = []
+        actual = fin 
+        while actual is not None:
+            camino.insert(0, actual)
+            actual = padres[actual]
+
+        return camino
+
 
 
         
