@@ -11,17 +11,60 @@ class Grafo:
     def agregar_arista(self, u, v, peso=1):
         self.agregar_vertice(u)
         self.agregar_vertice(v)
-        self.adyacencia[u].append((u, peso))
+        self.adyacencia[u].append(v)
+        if not self.es_dirigido:
+            self.adyacencia[v].append(u)
 
     def obtener_vecinos(self, vertice):
         if vertice in self.adyacencia:
-            return[vecino for vecino, _ in self.adyacencia[vertice]]
+            return self.adyacencia[vertice]
         else: 
             return []
         
     def existe_arista(self, u, v):
         if u in self.adyacencia:
-            return any(vecino == v for vecino, _ in self.adyacencia[u])
+            return v in self.adyacencia[u]
         return False
+    
+    def bfs(self, inicio):
+        if inicio not in self.adyacencia:
+            return []
+        
+        visitados = []
+        cola = [inicio]
+        orden_visita = []
+
+        while cola:
+
+            actual = cola.pop(0)
+            if actual not in visitados:
+                visitados.append(actual)
+                orden_visita.append(actual)
+                for vecino in self.obtener_vecinos(actual):
+                    if vecino not in visitados and vecino not in cola:
+                        cola.append(vecino)
+
+        return orden_visita
+    
+    def dfs(self, inicio):
+        visitados = []
+        orden_visita = []
+
+        def _dfs(vertice):
+            if vertice not in visitados:
+                visitados.append(vertice)
+                orden_visita.append(vertice)
+                for vecino in self.obtener_vecinos(vertice):
+                    _dfs(vecino)
+
+        if inicio in self.adyacencia:
+            _dfs(inicio)
+
+        return orden_visita
+
+
+        
+
+
 
         
